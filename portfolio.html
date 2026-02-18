@@ -1,0 +1,1107 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Enzo Surhati — Full-Stack Developer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&display=swap"
+      rel="stylesheet" />
+    <style>
+      :root {
+        --black: #0a0a0a;
+        --off-black: #111111;
+        --charcoal: #1a1a1a;
+        --cream: #f0ead6;
+        --gold: #c9a84c;
+        --gold-light: #e8c96a;
+        --red: #c0392b;
+        --muted: #5a5a5a;
+        --groove: #222;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        background: var(--black);
+        color: var(--cream);
+        font-family: "DM Mono", monospace;
+        font-size: 14px;
+        overflow-x: hidden;
+        cursor: none;
+      }
+
+      /* Custom cursor */
+      .cursor {
+        width: 10px;
+        height: 10px;
+        background: var(--gold);
+        border-radius: 50%;
+        position: fixed;
+        pointer-events: none;
+        z-index: 9999;
+        transform: translate(-50%, -50%);
+        transition:
+          width 0.2s,
+          height 0.2s;
+        top: -20px;
+        left: -20px;
+      }
+      .cursor-ring {
+        width: 34px;
+        height: 34px;
+        border: 1.5px solid var(--gold);
+        border-radius: 50%;
+        position: fixed;
+        pointer-events: none;
+        z-index: 9998;
+        transform: translate(-50%, -50%);
+        transition:
+          width 0.25s,
+          height 0.25s,
+          border-color 0.2s;
+        top: -20px;
+        left: -20px;
+        opacity: 0.7;
+      }
+
+      /* Noise overlay */
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+        pointer-events: none;
+        z-index: 9000;
+        opacity: 0.6;
+      }
+
+      /* ──────────────── NAV ──────────────── */
+      nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1.5rem 3rem;
+        border-bottom: 1px solid #1f1f1f;
+        background: rgba(10, 10, 10, 0.85);
+        backdrop-filter: blur(12px);
+      }
+      .nav-logo {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 1.5rem;
+        letter-spacing: 0.1em;
+        color: var(--cream);
+      }
+      .nav-logo span {
+        color: var(--gold);
+      }
+      .nav-links {
+        display: flex;
+        gap: 2.5rem;
+        list-style: none;
+      }
+      .nav-links a {
+        color: var(--muted);
+        text-decoration: none;
+        font-size: 11px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        transition: color 0.2s;
+      }
+      .nav-links a:hover {
+        color: var(--gold);
+      }
+
+      /* ──────────────── HERO ──────────────── */
+      .hero {
+        min-height: 100vh;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        position: relative;
+        overflow: hidden;
+      }
+      .hero-left {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 8rem 3rem 4rem 3rem;
+        position: relative;
+        z-index: 2;
+      }
+      .hero-tag {
+        font-size: 10px;
+        letter-spacing: 0.35em;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-bottom: 1.5rem;
+        opacity: 0;
+        animation: fadeUp 0.8s 0.2s forwards;
+      }
+      .hero-name {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: clamp(5rem, 9vw, 9rem);
+        line-height: 0.92;
+        letter-spacing: 0.02em;
+        color: var(--cream);
+        opacity: 0;
+        animation: fadeUp 0.8s 0.4s forwards;
+      }
+      .hero-name em {
+        font-style: normal;
+        color: var(--gold);
+        display: block;
+      }
+      .hero-desc {
+        margin-top: 2rem;
+        max-width: 380px;
+        color: var(--muted);
+        line-height: 1.8;
+        font-size: 13px;
+        opacity: 0;
+        animation: fadeUp 0.8s 0.6s forwards;
+      }
+      .hero-cta {
+        margin-top: 3rem;
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        opacity: 0;
+        animation: fadeUp 0.8s 0.8s forwards;
+      }
+      .btn {
+        padding: 0.8rem 2rem;
+        font-family: "DM Mono", monospace;
+        font-size: 11px;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        cursor: none;
+        text-decoration: none;
+        transition: all 0.2s;
+        border: none;
+      }
+      .btn-primary {
+        background: var(--gold);
+        color: var(--black);
+      }
+      .btn-primary:hover {
+        background: var(--gold-light);
+      }
+      .btn-outline {
+        background: transparent;
+        color: var(--cream);
+        border: 1px solid #333;
+      }
+      .btn-outline:hover {
+        border-color: var(--gold);
+        color: var(--gold);
+      }
+
+      /* Vinyl record */
+      .hero-right {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+      }
+      .vinyl {
+        width: min(460px, 80%);
+        aspect-ratio: 1;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle at center,
+          #222 0%,
+          #111 15%,
+          #1a1a1a 16%,
+          #0f0f0f 30%,
+          #1a1a1a 31%,
+          #0f0f0f 45%,
+          #1a1a1a 46%,
+          #0f0f0f 60%,
+          #1a1a1a 61%,
+          #0f0f0f 75%,
+          #1a1a1a 76%,
+          #0d0d0d 100%
+        );
+        box-shadow:
+          0 0 80px rgba(201, 168, 76, 0.15),
+          0 0 0 2px #222,
+          inset 0 0 60px rgba(0, 0, 0, 0.8);
+        animation: spin 12s linear infinite;
+        position: relative;
+        opacity: 0;
+        animation:
+          vinylIn 1s 0.5s forwards,
+          spin 12s 1.5s linear infinite;
+      }
+      .vinyl::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 22%;
+        aspect-ratio: 1;
+        border-radius: 50%;
+        background: radial-gradient(circle, var(--gold) 0%, #a07a20 100%);
+        box-shadow: 0 0 20px rgba(201, 168, 76, 0.5);
+      }
+      .vinyl-label {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 2;
+        text-align: center;
+        width: 20%;
+      }
+      .vinyl-glow {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background: conic-gradient(
+          from 0deg,
+          transparent 0%,
+          rgba(201, 168, 76, 0.06) 50%,
+          transparent 100%
+        );
+        animation: spin 6s linear infinite reverse;
+      }
+
+      /* Scroll indicator */
+      .scroll-hint {
+        position: absolute;
+        bottom: 2rem;
+        left: 3rem;
+        font-size: 10px;
+        letter-spacing: 0.25em;
+        text-transform: uppercase;
+        color: var(--muted);
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        opacity: 0;
+        animation: fadeUp 0.8s 1.2s forwards;
+      }
+      .scroll-hint::before {
+        content: "";
+        display: block;
+        width: 30px;
+        height: 1px;
+        background: var(--muted);
+        animation: pulse 2s infinite;
+      }
+
+      /* ──────────────── MARQUEE ──────────────── */
+      .marquee-strip {
+        background: var(--gold);
+        padding: 0.7rem 0;
+        overflow: hidden;
+        white-space: nowrap;
+      }
+      .marquee-inner {
+        display: inline-block;
+        animation: marquee 20s linear infinite;
+      }
+      .marquee-inner span {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 1.1rem;
+        letter-spacing: 0.15em;
+        color: var(--black);
+        margin: 0 2rem;
+      }
+      .marquee-inner span.dot {
+        color: rgba(0, 0, 0, 0.3);
+      }
+
+      /* ──────────────── SECTIONS ──────────────── */
+      section {
+        padding: 7rem 3rem;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+      .section-label {
+        font-size: 10px;
+        letter-spacing: 0.35em;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-bottom: 3rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+      .section-label::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: #222;
+      }
+
+      /* ──────────────── SKILLS ──────────────── */
+      .skills-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 1.5px;
+        background: #1a1a1a;
+        border: 1px solid #1a1a1a;
+      }
+      .skill-card {
+        background: var(--off-black);
+        padding: 2rem;
+        transition: background 0.2s;
+        position: relative;
+        overflow: hidden;
+      }
+      .skill-card:hover {
+        background: var(--charcoal);
+      }
+      .skill-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 3px;
+        height: 0;
+        background: var(--gold);
+        transition: height 0.3s;
+      }
+      .skill-card:hover::before {
+        height: 100%;
+      }
+      .skill-cat {
+        font-size: 10px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-bottom: 1rem;
+      }
+      .skill-list {
+        color: var(--cream);
+        line-height: 2;
+        font-size: 13px;
+      }
+
+      /* ──────────────── PROJECTS ──────────────── */
+      .projects-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 1px;
+        background: #1a1a1a;
+        border: 1px solid #1a1a1a;
+      }
+      .project-card {
+        background: var(--off-black);
+        padding: 2.5rem;
+        position: relative;
+        overflow: hidden;
+        transition: background 0.2s;
+      }
+      .project-card:hover {
+        background: var(--charcoal);
+      }
+      .project-num {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 5rem;
+        color: #1e1e1e;
+        line-height: 1;
+        position: absolute;
+        top: 1rem;
+        right: 1.5rem;
+        transition: color 0.3s;
+        user-select: none;
+      }
+      .project-card:hover .project-num {
+        color: #2a2a2a;
+      }
+      .project-role {
+        font-size: 10px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-bottom: 0.8rem;
+      }
+      .project-title {
+        font-family: "DM Serif Display", serif;
+        font-size: 1.5rem;
+        color: var(--cream);
+        margin-bottom: 1.2rem;
+        line-height: 1.2;
+      }
+      .project-desc {
+        color: var(--muted);
+        line-height: 1.8;
+        font-size: 12px;
+        margin-bottom: 1.5rem;
+      }
+      .project-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+      .tag {
+        padding: 0.25rem 0.75rem;
+        border: 1px solid #2a2a2a;
+        font-size: 10px;
+        letter-spacing: 0.1em;
+        color: var(--muted);
+        text-transform: uppercase;
+      }
+
+      /* ──────────────── EXPERIENCE ──────────────── */
+      .timeline {
+        position: relative;
+      }
+      .timeline::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 1px;
+        background: linear-gradient(to bottom, var(--gold), transparent);
+      }
+      .timeline-item {
+        padding-left: 2.5rem;
+        margin-bottom: 3.5rem;
+        position: relative;
+        opacity: 1;
+        transform: translateX(0);
+        transition:
+          opacity 0.6s,
+          transform 0.6s;
+      }
+      .timeline-item.animate-in {
+        opacity: 0;
+        transform: translateX(-20px);
+      }
+      .timeline-item.visible {
+        opacity: 1;
+        transform: translateX(0);
+      }
+      .timeline-item::before {
+        content: "";
+        position: absolute;
+        left: -4px;
+        top: 6px;
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        background: var(--gold);
+        box-shadow: 0 0 12px rgba(201, 168, 76, 0.5);
+      }
+      .tl-date {
+        font-size: 10px;
+        letter-spacing: 0.2em;
+        color: var(--gold);
+        text-transform: uppercase;
+        margin-bottom: 0.4rem;
+      }
+      .tl-company {
+        font-family: "DM Serif Display", serif;
+        font-size: 1.3rem;
+        color: var(--cream);
+        margin-bottom: 0.2rem;
+      }
+      .tl-role {
+        font-size: 11px;
+        letter-spacing: 0.1em;
+        color: var(--muted);
+        text-transform: uppercase;
+        margin-bottom: 1rem;
+      }
+      .tl-bullets {
+        list-style: none;
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 2;
+      }
+      .tl-bullets li::before {
+        content: "— ";
+        color: var(--gold);
+        opacity: 0.5;
+      }
+
+      /* ──────────────── CONTACT ──────────────── */
+      .contact-section {
+        padding: 7rem 3rem;
+        background: var(--off-black);
+        border-top: 1px solid #1a1a1a;
+      }
+      .contact-inner {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4rem;
+        align-items: center;
+      }
+      .contact-headline {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: clamp(3rem, 6vw, 6rem);
+        line-height: 0.95;
+        color: var(--cream);
+      }
+      .contact-headline em {
+        font-style: normal;
+        color: var(--gold);
+        display: block;
+      }
+      .contact-links {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+      .contact-link {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        text-decoration: none;
+        color: var(--muted);
+        font-size: 13px;
+        transition: color 0.2s;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid #1a1a1a;
+      }
+      .contact-link:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+      }
+      .contact-link:hover {
+        color: var(--gold);
+      }
+      .contact-link-label {
+        font-size: 10px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--gold);
+        min-width: 80px;
+        font-family: "DM Mono", monospace;
+      }
+
+      /* ──────────────── FOOTER ──────────────── */
+      footer {
+        background: var(--black);
+        padding: 1.5rem 3rem;
+        border-top: 1px solid #1a1a1a;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 10px;
+        letter-spacing: 0.1em;
+        color: var(--muted);
+      }
+
+      /* ──────────────── ANIMATIONS ──────────────── */
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes spin {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      @keyframes vinylIn {
+        from {
+          opacity: 0;
+          transform: scale(0.85) rotate(-30deg);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1) rotate(0deg);
+        }
+      }
+      @keyframes marquee {
+        from {
+          transform: translateX(0);
+        }
+        to {
+          transform: translateX(-50%);
+        }
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 0.4;
+        }
+        50% {
+          opacity: 1;
+        }
+      }
+
+      /* ──────────────── RESPONSIVE ──────────────── */
+      @media (max-width: 768px) {
+        nav {
+          padding: 1.2rem 1.5rem;
+        }
+        .nav-links {
+          display: none;
+        }
+        .hero {
+          grid-template-columns: 1fr;
+        }
+        .hero-left {
+          padding: 7rem 1.5rem 3rem;
+        }
+        .hero-right {
+          height: 300px;
+        }
+        .vinyl {
+          width: 240px;
+        }
+        section {
+          padding: 4rem 1.5rem;
+        }
+        .contact-inner {
+          grid-template-columns: 1fr;
+          gap: 2rem;
+        }
+        footer {
+          flex-direction: column;
+          gap: 0.5rem;
+          text-align: center;
+        }
+        .scroll-hint {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Custom Cursor -->
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-ring" id="cursorRing"></div>
+
+    <!-- NAV -->
+    <nav>
+      <div class="nav-logo">ES<span>.</span></div>
+      <ul class="nav-links">
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#experience">Experience</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+
+    <!-- HERO -->
+    <div class="hero">
+      <div class="hero-left">
+        <p class="hero-tag">Full-Stack Software Developer · NYC</p>
+        <h1 class="hero-name">Enzo<em>Surhati</em></h1>
+        <p class="hero-desc">
+          Building products where code meets craft. From hospital IT to e-commerce platforms — 7
+          years of leading teams, now building the tech behind them.
+        </p>
+        <div class="hero-cta">
+          <a href="#projects" class="btn btn-primary">View Projects</a>
+          <a href="#contact" class="btn btn-outline">Get In Touch</a>
+        </div>
+        <div class="scroll-hint">Scroll to explore</div>
+      </div>
+      <div class="hero-right">
+        <div class="vinyl">
+          <div class="vinyl-glow"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MARQUEE -->
+    <div class="marquee-strip" aria-hidden="true">
+      <div class="marquee-inner">
+        <span>React</span><span class="dot">✦</span> <span>Node.js</span><span class="dot">✦</span>
+        <span>PostgreSQL</span><span class="dot">✦</span> <span>Express</span
+        ><span class="dot">✦</span> <span>Tailwind CSS</span><span class="dot">✦</span>
+        <span>Redux</span><span class="dot">✦</span> <span>Shopify Liquid</span
+        ><span class="dot">✦</span> <span>REST APIs</span><span class="dot">✦</span>
+        <span>Agile</span><span class="dot">✦</span> <span>React</span><span class="dot">✦</span>
+        <span>Node.js</span><span class="dot">✦</span> <span>PostgreSQL</span
+        ><span class="dot">✦</span> <span>Express</span><span class="dot">✦</span>
+        <span>Tailwind CSS</span><span class="dot">✦</span> <span>Redux</span
+        ><span class="dot">✦</span> <span>Shopify Liquid</span><span class="dot">✦</span>
+        <span>REST APIs</span><span class="dot">✦</span> <span>Agile</span
+        ><span class="dot">✦</span>
+      </div>
+    </div>
+
+    <!-- SKILLS -->
+    <section id="skills">
+      <div class="section-label">Technical Skills</div>
+      <div class="skills-grid">
+        <div class="skill-card">
+          <div class="skill-cat">Languages</div>
+          <div class="skill-list">
+            JavaScript<br />HTML · CSS · SQL<br />Liquid<br /><em
+              style="color: var(--muted); font-style: normal; font-size: 11px"
+              >+ Python (learning)</em
+            >
+          </div>
+        </div>
+        <div class="skill-card">
+          <div class="skill-cat">Frameworks & Libraries</div>
+          <div class="skill-list">
+            React · Redux<br />Node.js · Express<br />Bootstrap · Tailwind CSS
+          </div>
+        </div>
+        <div class="skill-card">
+          <div class="skill-cat">Databases</div>
+          <div class="skill-list">PostgreSQL<br />Prisma ORM</div>
+        </div>
+        <div class="skill-card">
+          <div class="skill-cat">Tools & Platforms</div>
+          <div class="skill-list">
+            Git · GitHub<br />REST APIs · VS Code<br />Shopify · Agile / Scrum
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROJECTS -->
+    <section id="projects">
+      <div class="section-label">Selected Projects</div>
+      <div class="projects-grid">
+        <div class="project-card">
+          <span class="project-num">01</span>
+          <div class="project-role">Capstone · Lead Engineer · Feb 2025</div>
+          <h3 class="project-title">Hi-Fi Records</h3>
+          <p class="project-desc">
+            A full-featured e-commerce platform specializing in sample album sales. Led development
+            end-to-end — from database architecture to deployment — managing a team of developers
+            throughout.
+          </p>
+          <div class="project-tags">
+            <span class="tag">React</span>
+            <span class="tag">Node.js</span>
+            <span class="tag">Express</span>
+            <span class="tag">PostgreSQL</span>
+            <span class="tag">Prisma</span>
+            <span class="tag">Tailwind</span>
+          </div>
+        </div>
+        <div class="project-card">
+          <span class="project-num">02</span>
+          <div class="project-role">Project Manager · Engineer · Mar 2025</div>
+          <h3 class="project-title">PetsWorld.com</h3>
+          <p class="project-desc">
+            Re-architected and modernized a million-dollar e-commerce platform for pet supplies.
+            Coordinated design, development, and marketing teams through full Agile sprint cycles
+            from planning to QA to deployment.
+          </p>
+          <div class="project-tags">
+            <span class="tag">Agile</span>
+            <span class="tag">Sprint Planning</span>
+            <span class="tag">QA</span>
+            <span class="tag">React</span>
+            <span class="tag">Node.js</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- EXPERIENCE -->
+    <section id="experience">
+      <div class="section-label">Experience</div>
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="tl-date">March 2025 – Present</div>
+          <div class="tl-company">Be Well Medical Supply</div>
+          <div class="tl-role">Project Manager & Software Engineer</div>
+          <ul class="tl-bullets">
+            <li>
+              Developed and customized Shopify storefronts using Liquid, mastering theme
+              architecture.
+            </li>
+            <li>
+              Built and customized homepage, product, and template layouts aligned with business
+              goals.
+            </li>
+            <li>
+              Optimized storefront performance and ensured mobile responsiveness across all layouts.
+            </li>
+          </ul>
+        </div>
+
+        <div class="timeline-item">
+          <div class="tl-date">Jan 2018 – Mar 2025</div>
+          <div class="tl-company">Be Well Medical Supply</div>
+          <div class="tl-role">Customer Service Lead</div>
+          <ul class="tl-bullets">
+            <li>
+              Led a team of 24 representatives — drove major improvement in client satisfaction
+              scores.
+            </li>
+            <li>
+              Trained and mentored staff, resulting in measurable performance improvements across
+              the team.
+            </li>
+            <li>Key liaison between management and staff, ensuring operational efficiency.</li>
+            <li>Contributed to 160% customer volume growth — from 5,000 to over 13,000 clients.</li>
+          </ul>
+        </div>
+
+        <div class="timeline-item">
+          <div class="tl-date">Mar 2017 – May 2017</div>
+          <div class="tl-company">Maimonides Medical Center</div>
+          <div class="tl-role">IT Intern — Cardiology Dept.</div>
+          <ul class="tl-bullets">
+            <li>Digitized and archived patient records in compliance with data protocols.</li>
+            <li>Proficient with hospital software systems for optimized record management.</li>
+            <li>Supported system upgrades and maintenance to improve operational efficiency.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- EDUCATION STRIP -->
+    <div
+      style="
+        background: var(--off-black);
+        border-top: 1px solid #1a1a1a;
+        border-bottom: 1px solid #1a1a1a;
+      ">
+      <div
+        style="
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 3rem;
+          display: grid;
+          grid-template-columns: 1fr 1fr 1fr;
+          gap: 1px;
+          background: #1a1a1a;
+        ">
+        <div style="background: var(--off-black); padding: 2rem 2.5rem">
+          <div
+            style="
+              font-size: 10px;
+              letter-spacing: 0.2em;
+              text-transform: uppercase;
+              color: var(--gold);
+              margin-bottom: 0.5rem;
+            ">
+            Oregon State University
+          </div>
+          <div
+            style="
+              font-family: &quot;DM Serif Display&quot;, serif;
+              font-size: 1.2rem;
+              margin-bottom: 0.3rem;
+            ">
+            B.S. Computer Science
+          </div>
+          <div style="color: var(--muted); font-size: 11px; margin-bottom: 0.6rem">
+            Junior · Expected Mar 2028
+          </div>
+          <span
+            style="
+              font-size: 9px;
+              letter-spacing: 0.15em;
+              text-transform: uppercase;
+              background: var(--gold);
+              color: var(--black);
+              padding: 0.2rem 0.6rem;
+            "
+            >In Progress</span
+          >
+        </div>
+        <div style="background: var(--off-black); padding: 2rem 2.5rem">
+          <div
+            style="
+              font-size: 10px;
+              letter-spacing: 0.2em;
+              text-transform: uppercase;
+              color: var(--gold);
+              margin-bottom: 0.5rem;
+            ">
+            Fullstack Academy
+          </div>
+          <div
+            style="
+              font-family: &quot;DM Serif Display&quot;, serif;
+              font-size: 1.2rem;
+              margin-bottom: 0.3rem;
+            ">
+            Software Engineering Certificate
+          </div>
+          <div style="color: var(--muted); font-size: 11px">
+            Web Development Bootcamp · Aug 2024 – Mar 2025
+          </div>
+        </div>
+        <div style="background: var(--off-black); padding: 2rem 2.5rem">
+          <div
+            style="
+              font-size: 10px;
+              letter-spacing: 0.2em;
+              text-transform: uppercase;
+              color: var(--gold);
+              margin-bottom: 0.5rem;
+            ">
+            CUNY Brooklyn College
+          </div>
+          <div
+            style="
+              font-family: &quot;DM Serif Display&quot;, serif;
+              font-size: 1.2rem;
+              margin-bottom: 0.3rem;
+            ">
+            Computer Science — 68 Credits
+          </div>
+          <div style="color: var(--muted); font-size: 11px">B.S. Program · Aug 2021 – May 2024</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTACT -->
+    <div class="contact-section" id="contact">
+      <div class="contact-inner">
+        <div>
+          <div class="section-label" style="margin-bottom: 1.5rem">Let's Connect</div>
+          <h2 class="contact-headline">Open to<em>New Roles</em></h2>
+          <p
+            style="
+              color: var(--muted);
+              margin-top: 1.5rem;
+              font-size: 13px;
+              line-height: 1.8;
+              max-width: 360px;
+            ">
+            I'm actively seeking full-stack engineering opportunities in NYC and remote. Let's build
+            something great.
+          </p>
+        </div>
+        <div class="contact-links">
+          <a href="mailto:enzosurhati@gmail.com" class="contact-link">
+            <span class="contact-link-label">Email</span>
+            enzosurhati@gmail.com
+          </a>
+          <a href="tel:9298131472" class="contact-link">
+            <span class="contact-link-label">Phone</span>
+            (929) 813-****
+          </a>
+          <a
+            href="https://www.linkedin.com/in/enzosurha27"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="contact-link">
+            <span class="contact-link-label">LinkedIn</span>
+            /in/enzosurha27
+          </a>
+          <a href="https://github.com/EnzoSurhati" target="_blank" class="contact-link">
+            <span class="contact-link-label">GitHub</span>
+            /EnzoSurhati
+          </a>
+          <a href="https://enzofolio.onrender.com" target="_blank" class="contact-link">
+            <span class="contact-link-label">Portfolio</span>
+            enzofolio.onrender.com
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+      <span>© 2025 Enzo Surhati. All rights reserved.</span>
+      <span style="color: #333">Built with care · NYC</span>
+    </footer>
+
+    <script>
+      // ── Custom Cursor ──
+      const cursor = document.getElementById("cursor");
+      const ring = document.getElementById("cursorRing");
+      let mx = 0,
+        my = 0,
+        rx = 0,
+        ry = 0;
+
+      cursor.style.opacity = "0";
+      ring.style.opacity = "0";
+
+      document.addEventListener("mousemove", (e) => {
+        mx = e.clientX;
+        my = e.clientY;
+        cursor.style.opacity = "1";
+        ring.style.opacity = "0.75";
+      });
+
+      document.addEventListener("mouseleave", () => {
+        cursor.style.opacity = "0";
+        ring.style.opacity = "0";
+      });
+
+      (function animateCursor() {
+        rx += (mx - rx) * 0.1;
+        ry += (my - ry) * 0.1;
+        cursor.style.left = mx + "px";
+        cursor.style.top = my + "px";
+        ring.style.left = rx + "px";
+        ring.style.top = ry + "px";
+        requestAnimationFrame(animateCursor);
+      })();
+
+      document.querySelectorAll("a, button, .skill-card, .project-card").forEach((el) => {
+        el.addEventListener("mouseenter", () => {
+          cursor.style.width = "5px";
+          cursor.style.height = "5px";
+          ring.style.width = "52px";
+          ring.style.height = "52px";
+        });
+        el.addEventListener("mouseleave", () => {
+          cursor.style.width = "10px";
+          cursor.style.height = "10px";
+          ring.style.width = "34px";
+          ring.style.height = "34px";
+        });
+      });
+
+      // ── Timeline scroll-in animation ──
+      const timelineItems = document.querySelectorAll(".timeline-item");
+
+      if ("IntersectionObserver" in window) {
+        // Start hidden
+        timelineItems.forEach((el) => {
+          el.style.opacity = "0";
+          el.style.transform = "translateX(-20px)";
+        });
+
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry, i) => {
+              if (entry.isIntersecting) {
+                setTimeout(() => {
+                  entry.target.style.opacity = "1";
+                  entry.target.style.transform = "translateX(0)";
+                }, i * 150);
+                observer.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0.1, rootMargin: "0px 0px -40px 0px" },
+        );
+
+        timelineItems.forEach((el) => observer.observe(el));
+      }
+    </script>
+  </body>
+</html>
